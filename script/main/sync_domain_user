@@ -1,0 +1,14 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp "$LIBS" $0 $@
+!#
+
+import doom._
+
+val domainname = prompt(args, 0, "domain")
+val userid = prompt(args, 1, "userid")
+SyncDomainUser(domainname, userid).print

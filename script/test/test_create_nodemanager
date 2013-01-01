@@ -1,0 +1,47 @@
+#!/bin/sh
+LIBS=
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val domain = Domain(
+  name = "asset_osb_local",
+  domaintype = "osb",
+  servers = List(
+    Server(
+      name = "asset_osb_local_admin_server",
+      servertype = "admin",
+      address = "bcdvl20.rdc.local",
+      port = 5100
+    )
+  ),
+  clusters = List(
+    Cluster(
+      name = "asset_osb_local_cluster",
+      servers = List(
+        Server(
+          name = "asset_osb_local_server_1",
+          address = "bcdvl23.rdc.local",
+          port = 5110,
+          jmxport = 2000,
+          machinename = "bcdvl23"
+        ),
+        Server(
+          name = "asset_osb_local_server_2",
+          address = "bcdvl24.rdc.local",
+          port = 5110,
+          jmxport = 2000,
+          machinename = "bcdvl24"
+        )
+      )
+    )
+  )
+)
+
+val cmd = Lazarus(CreateNodeManager(domain), "bcdvl21", "beasvbd")
+cmd.print

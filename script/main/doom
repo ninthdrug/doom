@@ -1,0 +1,38 @@
+#!/bin/sh
+LIBS=""
+for jar in $DOOMHOME/lib/*.jar
+do
+    LIBS=$LIBS:$jar
+done
+
+if [ "$1" = "agent" ]; then
+    shift
+    exec scala -classpath "$LIBS" doom.agent.DoomAgent $@
+fi
+
+if [ "$1" = "put" ]; then
+    shift
+    exec scala -classpath "$LIBS" ninthdrug.command.Put $@
+fi
+
+if [ "$1" = "get" ]; then
+    shift
+    exec scala -classpath "$LIBS" ninthdrug.command.Get $@
+fi
+
+if [ "$1" = "ssh" ]; then
+    shift
+    exec scala -classpath "$LIBS" ninthdrug.command.Ssh $@
+fi
+
+if [ "$1" = "rez" ]; then
+    shift
+    exec scala -classpath "$LIBS" ninthdrug.command.Rez $@
+fi
+
+if [ "$1" = "start" ]; then
+    shift
+    exec scala -classpath "$LIBS" doom.Start $@
+fi
+
+exec scala -classpath "$LIBS" $@

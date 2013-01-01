@@ -1,0 +1,47 @@
+#!/bin/sh
+LIBS=
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -cp $LIBS $0 $@
+!#
+
+import doom._
+  
+val domain = Domain(
+  name = "poc_wls_local",
+  domaintype = "wls",
+  servers = List(
+    Server(
+      name = "poc_wls_local_admin_server",
+      servertype = "admin",
+      address = "localhost",
+      port = 5200
+    )
+  ),
+  clusters = List(
+    Cluster(
+      name = "poc_wls_local_cluster",
+      servers = List(
+        Server(
+          name = "poc_wls_local_server_1",
+          address = "localhost",
+          port = 5210,
+          machinename = "localhost"
+        ),
+        Server(
+          name = "poc_wls_local_server_2",
+          address = "localhost",
+          port = 5220,
+          machinename = "localhost"
+        )
+      )
+    )
+  )
+)
+
+val domains_dir = Config.get("doom.weblogic.domains_dir")
+println("domains_dir: " + domains_dir)
+Sh("rm -rf " + domains_dir + "/poc_wls_local").print
+CreateWlsDomainOffline(domain, "weblogic1").print

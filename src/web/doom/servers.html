@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Doom</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/doom/css/doom.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/doom/css/ui-lightness/jquery-ui-1.9.2.custom.css" type="text/css" media="screen" />
+    <link rel="SHORTCUT ICON" href="/doom/favicon.ico"/>
+    <script src="js/jquery-1.8.3.js" type="text/javascript"> </script>
+    <script src="js/jquery-ui-1.9.2.custom.js" type="text/javascript"> </script>
+    <script src="js/servers.js" type="text/javascript"> </script>
+</head>
+<body>
+<div id="maincontainer">
+    <div id="header">
+         <img src="/doom/images/logo.png" alt="doom"/>
+    </div>
+    <div id="navigation">
+        <ul id="navmenu">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="servers.html">Servers</a></li>
+            <li><a href="queues.html">Queues</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="logout.html">Logout</a></li>
+        </ul>
+    </div>
+    <div id="contents">
+        <div id="status">
+            <form id="serversform" onsubmit="return false;" action="">
+                <table id="servers_table" border="1">
+                    <thead>
+                        <tr align="center">
+                            <th></th>
+                            <th colspan="6"><input type="checkbox" id="dev_checkbox"  />development</th>
+                            <th colspan="6"><input type="checkbox" id="test_checkbox" />test</th>
+                            <th colspan="6"><input type="checkbox" id="acc_checkbox"  />acceptance</th>
+                            <th colspan="6"><input type="checkbox" id="prd_checkbox"  />production</th>
+                        </tr>
+                        <tr class="servertype">
+                            <td></td>
+                            <td><input type="checkbox"/>lb</td>
+                            <td><input type="checkbox"/>nm1</td>
+                            <td><input type="checkbox"/>nm2</td>
+                            <td><input type="checkbox"/>adm</td>
+                            <td><input type="checkbox"/>ms1</td>
+                            <td><input type="checkbox"/>ms2</td>
+                            <td><input type="checkbox"/>lb</td>
+                            <td><input type="checkbox"/>nm1</td>
+                            <td><input type="checkbox"/>nm2</td>
+                            <td><input type="checkbox"/>adm</td>
+                            <td><input type="checkbox"/>ms1</td>
+                            <td><input type="checkbox"/>ms2</td>
+                            <td><input type="checkbox"/>lb</td>
+                            <td><input type="checkbox"/>nm1</td>
+                            <td><input type="checkbox"/>nm2</td>
+                            <td><input type="checkbox"/>adm</td>
+                            <td><input type="checkbox"/>ms1</td>
+                            <td><input type="checkbox"/>ms2</td>
+                            <td><input type="checkbox"/>lb</td>
+                            <td><input type="checkbox"/>nm1</td>
+                            <td><input type="checkbox"/>nm2</td>
+                            <td><input type="checkbox"/>adm</td>
+                            <td><input type="checkbox"/>ms1</td>
+                            <td><input type="checkbox"/>ms2</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <tr>
+                            <td></td>
+                            <td></td><td></td><td></td>
+                            <td></td><td></td><td></td>
+                            <td></td><td></td><td></td>
+                            <td></td><td></td><td></td>
+                            <td></td><td></td><td></td>
+                            <td></td><td></td><td></td>
+                       </tr>
+                    </tbody>
+                </table>
+                <p>
+                    <input class="btn" type="submit" name="start" value="start" onclick="submitReq('start')"/>
+                    <input class="btn" type="submit" name="stop" value="stop" onclick="submitReq('stop')"/>
+                    <input class="btn" type="submit" name="kill" value="kill" onclick="submitReq('kill')"/>
+                </p>
+            </form>
+        </div>
+        user filter:
+        <select id="user_filter" name="user_filter">
+            <option value=""></option>
+        </select>
+        server filter:
+        <input id="server_filter" name="server_filter" type="text"/>
+        <span id="prev"><a href="javascript:void(0)" onClick="pager('prev')" class="ui-state-default">Prev</a></span>
+        <span id="next"><a href="javascript:void(0)" onClick="pager('next')" class="ui-state-default">Next</a></span>
+        <input id="log_offset" name="log_offset" type="hidden" value="0"/>
+        <div id="request">
+	    <table id="logtable" class="ui-widget">
+                <thead class="ui-widget-header">
+                    <tr align="center">
+                        <th>user</th>
+                        <th>request</th>
+                        <th>server</th>
+                        <th>start</th>
+                        <th>end</th>
+                        <th>status</th>
+                    </tr>
+                </thead>
+                <tbody class="ui-widget-conent">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="footer">
+    </div>
+</div>
+<div id="debug">
+</div>
+
+<div id="popup" style="display:none">
+  <a id="wlsconsole" target="_blank" href="#">wlsconsole</a>
+  <span id="console_spacer">    </span>
+  <a id="sbconsole" target="_blank" href="#">sbconsole</a>
+  <br/>
+  address: <span id="address">address</span>
+  <br/>
+  port: <span id="port">port</span>
+  <br/>
+  jmxport: <span id="jmxport">jmxport</span>
+</div>
+
+<div id="errorpopup">
+<span id="errormsg">Doom server is not reachable.</span>
+</div>
+</body>
+</html>

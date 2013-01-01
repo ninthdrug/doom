@@ -1,0 +1,9 @@
+DROP TABLE audit;
+DROP TABLE credentials;
+DROP TABLE groupmembers;
+DROP TABLE permissions;
+DROP TABLE groups;
+DROP TABLE users;
+DROP TABLE servers;
+DROP TABLE domains;
+DROP TABLE machines;

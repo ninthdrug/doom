@@ -1,0 +1,28 @@
+import doom._
+
+val msg = request.getParam("msg")
+val userid = request.getCookie("userid")
+if (userid != null) {
+  val user = ConfigCache.getUser(userid)
+  if (user != null) {
+    doc.getElementById("userid").text(user.userid)
+    doc.getElementById("username").text(user.username)
+    doc.getElementById("email").text(user.email)
+    if (msg == "1") {
+      doc.getElementById("msg").text(
+        "Passwords do not match.  Please try again."
+      )
+    } else if (msg == "2") {
+      doc.getElementById("msg").text("Password changed successfuly.")
+    } else if (msg == "3") {
+      doc.getElementById("msg").text(
+        "Password must be at least 8 characters and has at least one numeral" +
+        " or special character.  Please try again."
+      )
+    } else {
+      doc.getElementById("msg").text("")
+    }
+    return doc
+  }
+}
+redirect("home.html")

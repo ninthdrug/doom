@@ -1,0 +1,16 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp "$LIBS" $0 $@
+!#
+
+import doom._
+import ninthdrug.command._
+
+val userid = prompt(args, 0, "userid")
+for (domain <- ConfigCache.domains) {
+  Sh("sync_domain_user " + domain.name + " " + userid).print
+}

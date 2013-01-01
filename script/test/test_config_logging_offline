@@ -1,0 +1,40 @@
+#!/bin/sh
+LIBS=
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val domain = Domain(
+  name = "poc_osb_local",
+  domaintype = "osb",
+  osb_version = "11.1.1.5.0",
+  wl_version = "10.3.5.0",
+  servers = List(
+    Server( 
+      name = "poc_osb_local_admin_server",
+      servertype = "admin",
+      address = "localhost",
+      port = 7001
+    )
+  ),
+  clusters = List(
+    Cluster(
+      name = "poc_osb_local_cluster",
+      servers = List(
+        Server(
+          name = "poc_osb_local_server_1",
+          address = "localhost",
+          port = 7010,
+          machinename = "localhost"
+        )
+      )
+    )
+  ) 
+)  
+
+ConfigLoggingOffline(domain).print

@@ -1,0 +1,13 @@
+import doom._
+
+val userid = request.params("username")
+val password = request.params("password")
+
+if (Auth.authenticate(userid, password)) {
+    response.setCookie("userid", userid)
+    val mygroups = DoomAPI.getGroupsForUser(userid).mkString(" ")
+    response.setCookie("mygroups", mygroups)
+    redirect("servers.html")
+} else {
+    redirect("home.html")
+}

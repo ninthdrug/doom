@@ -1,0 +1,2 @@
+import doom._
+return ConfigCache.json

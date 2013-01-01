@@ -1,0 +1,67 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val domain = Domain(
+  name = "mydomain_wls_dev",
+  domaintype = "wls",
+  domaingroup = "mydomain_wls",
+  project = "mydomain",
+  env = "dev",
+  java_vendor = "Sun",
+  java_home = "/opt/oracle/jdk160",
+  mw_home = "/opt/oracle/11g",
+  wl_home = "/opt/oracle/11g/wlserver_10.3",
+  wl_version = "10.3.5.0",
+  servers = List(
+    Server(
+      name = "mydomain_wls_dev_admin_server",
+      servertype = "admin",
+      machinename = "bcdvl0x",
+      address = "bcdvlx0.rdc.local",
+      port = 5100,
+      jmxport = 1500
+    )
+  ),
+  clusters = List(
+    Cluster(
+      name = "mydomain_wls_dev_cluster",
+      servers = List(
+        Server(
+          name = "mydomain_wls_dev_server_1",
+          servertype = "managed",
+          machinename = "bcdvlx1",
+          address = "bcdvlx1.rdc.local",
+          port = 5110,
+          jmxport = 1500
+        ),
+        Server(
+          name = "mydomain_wls_dev_server_2",
+          servertype = "managed",
+          machinename = "bcdvlx2",
+          address = "bcdvlx2.rdc.local",
+          port = 5110,
+          jmxport = 1500
+        )
+      )
+    )
+  )
+)
+
+val machines = List(
+  Machine("bcdvlx0", "bcdvl0x.rdc.local", "beasvbd"),
+  Machine("bcdvlx1", "bcdvl1x.rdc.local", "beasvbd"),
+  Machine("bcdvlx2", "bcdvl2x.rdc.local", "beasvbd")
+)
+
+val password = Console.readLine("weblogic password: ")
+
+AddMachines(machines).print
+AddDomain(domain, password).print

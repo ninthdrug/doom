@@ -1,0 +1,9 @@
+grant select on table machines to doomreader;
+grant select on table domains to doomreader;
+grant select on table servers to doomreader;
+grant select on table audit to doomreader;
+grant select on table users to doomreader;
+grant select on table groups to doomreader;
+grant select on table groupmembers to doomreader;
+grant select on table permissions to doomreader;
+grant select on table credentials to doomreader;

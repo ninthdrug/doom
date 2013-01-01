@@ -1,0 +1,10 @@
+import doom.server.AuditCache
+import doom.server.AuditSearch
+
+val user_filter = request.params("user_filter")
+val server_filter = request.params("server_filter")
+val limit = request.params("limit").toInt
+val offset = request.params("offset").toInt
+val search = AuditSearch(user_filter, server_filter, limit, offset)
+val out = AuditCache.findJSON(search)
+return out

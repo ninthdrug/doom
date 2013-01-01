@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Doom</title>
+    <link rel="stylesheet" href="/doom/css/doom.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/doom/css/ui-lightness/jquery-ui-1.9.2.custom.css" type="text/css" media="screen" />
+    <link rel="SHORTCUT ICON" href="/doom/favicon.ico"/>
+    <script src="js/jquery-1.8.3.js" type="text/javascript"> </script>
+    <script src="js/jquery-ui-1.9.2.custom.js" type="text/javascript"> </script>
+    <script src="jquery.jstree.js" type="text/javascript"> </script>
+    <script src="js/queues.js" type="text/javascript"> </script>
+</head>
+<body>
+<div id="maincontainer">
+    <div id="header">
+         <img src="/doom/images/logo.png" alt="doom"/>
+    </div>
+    <div id="navigation">
+        <ul id="navmenu">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="servers.html">Servers</a></li>
+            <li><a href="queues.html">Queues</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="logout.html">Logout</a></li>
+        </ul>
+    </div>
+    <div id="queuescontent">
+        <div id="tree_div"> </div>
+        <div id="panel_div">
+            <form id="queuesform" onsubmit="return false;" action="">
+                <table id="queues_table" border="1">
+                    <thead>
+                        <tr align="center">
+                            <th class="min400">queue</th>
+                            <th>messages</th>
+                            <th>pending</th>
+                            <th>action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                       </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" id="servername" name="servername" value=""/>
+            </form>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div id="debug">
+</div>
+<div id="errorpopup">
+<span id="errormsg">Doom server is not reachable.</span>
+</div>
+<div id="backuppopup">
+server: <span id="backup_server">myserver</span>
+<br/>
+queue:  <span id="backup_queue">myqueue</span>
+<br/>
+status: <span id="backup_status">working...</span>
+</div>
+</body>
+</html>

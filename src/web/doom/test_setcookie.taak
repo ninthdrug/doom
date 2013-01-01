@@ -1,0 +1,3 @@
+response.setCookie("a", "apple")
+response.setEncryptedCookie("foo", "b", "bear")
+redirect("test_cookies.taak")

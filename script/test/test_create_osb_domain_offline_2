@@ -1,0 +1,47 @@
+#!/bin/sh
+LIBS=
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val domain = Domain(
+  name = "poc_osb_local",
+  domaintype = "osb",
+  servers = List(
+    Server( 
+      name = "poc_osb_local_admin_server",
+      servertype = "admin",
+      address = "bcdvl20.rdc.local",
+      port = 7200
+    )
+  ),
+  clusters = List(
+    Cluster(
+      name = "poc_osb_local_cluster",
+      servers = List(
+        Server(
+          name = "poc_osb_local_server_1",
+          address = "bcdvl21.rdc.local",
+          port = 7210,
+          machinename = "bcdvl21"
+        ),
+        Server(
+          name = "poc_osb_local_server_2",
+          address = "bcdvl22.rdc.local",
+          port = 7210,
+          machinename = "bcdvl22"
+        )
+      )
+    )
+  ) 
+)  
+
+val domains_dir = Config.get("doom.weblogic.domains_dir")
+println("domains_dir: " + domains_dir)
+Sh("rm -rf " + domains_dir + "/poc_osb_local").print
+CreateOsbDomainOffline(domain, "weblogic11g").print

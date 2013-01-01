@@ -1,0 +1,42 @@
+import doom._
+import doom.server._
+
+val userid = request.getCookie("userid")
+if (userid == null || userid == "") {
+    return ""
+}
+
+val action = request.params("action")
+val servernames = request.params.getAll("server")
+val servers = servernames.filter(
+  servername => ConfigCache.hasServer(servername)
+).map(
+  servername => ConfigCache.getServer(servername)
+)
+
+if (action == "stop") {
+  for (server <- servers; if server.servertype == "managed") {
+    println(action + " " + server.name)
+    ControlManager ! new ControlRequest(userid, server.name, action)
+  }
+  for (server <- servers; if server.servertype != "managed") {
+    println(action + " " + server.name)
+    ControlManager ! new ControlRequest(userid, server.name, action)
+  }
+} else if (action == "start" || action == "restart") {
+  for (server <- servers; if server.servertype != "managed") {
+    println(action + " " + server.name)
+    ControlManager ! new ControlRequest(userid, server.name, action)
+  }
+  for (server <- servers; if server.servertype == "managed") {
+    println(action + " " + server.name)
+    ControlManager ! new ControlRequest(userid, server.name, action)
+  }
+} else {
+  for (server <- servers) {
+    println(action + " " + server.name)
+    ControlManager ! new ControlRequest(userid, server.name, action)
+  }
+}
+
+return ""

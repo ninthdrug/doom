@@ -1,0 +1,30 @@
+import doom._
+import scala.collection.mutable.ListBuffer
+
+val servername = request.params("server")
+val server = ConfigCache.getServer(servername)
+val queues = if (server == null) {
+  List[JmsQueueState]()
+} else {
+  val domain = ConfigCache.getDomain(server.domainname)
+  val buf = ListBuffer[JmsQueueState]()
+  val password = CredentialCache.getPassword(
+    "weblogic", 
+    domain.name,
+    "weblogic"
+  )
+  var jmx: WeblogicJMX = null
+  try {
+      jmx = WeblogicJMX(server.address, server.port, "weblogic", password)
+      buf ++= jmx.getJmsQueueStates(server.name)
+  } finally {
+    try {
+      jmx.close()
+    } catch {
+      case _ =>
+    }
+  }
+  buf.toList
+}
+val json = "[" + (queues map (_.json)).mkString(", ") + "]"
+return json

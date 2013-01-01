@@ -1,0 +1,30 @@
+What you need:
+ - linux server
+ - java jdk version 1.6
+ - ant version 1.8
+ - scala version 1.9.1
+ - ninthdrug
+
+Optional:
+ - postgresql
+ - sudo rights to postgres user
+
+Buildingct the tar ball.
+ - Extract the tar ball.
+ - Change to the doom2/trunk directory.
+ - Edit the build.xml file to fit your installation. At the minimum you may
+   want to change the scala.home property to point to your scala installtion
+   and install.dir to point to where you want to install doom.  It is easiest
+   to use the same directory that you installed ninthdrug.
+ - Invoke ant.
+ - Invoke ant install.
+
+Configuring:
+   The installation adds the path to the main doom configuration to your $HOME/.ninthdrug file.  That should be ${install.dir}/conf/doom.conf.  Edit this as 
+you see fit.
+
+   The doom database can be created by running the createdb.sh script.  
+You will need sudo rights to the postgres user for this step.  
+You will also be prompted for passwords to the doom and doomreader database users to be created.
+Edit the doom.conf file to set the correct user and password for the doom database.
+

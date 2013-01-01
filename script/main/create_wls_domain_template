@@ -1,0 +1,44 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val domain = Domain(
+  name = "mydomain_wls_dev",
+  domaintype = "wls",
+  adminserver = Server(
+    name = "mydomain_wls_dev_admin_server",
+    address = "bcdvlx0.rdc.local",
+    port = 5100,
+    jmx_port = 1500
+  ),
+  clusters = List(
+    Cluster(
+      name = "mydomain_wls_dev_cluster",
+      servers = List(
+        Server(
+          name = "mydomain_wls_dev_server_1",
+          address = "bcdvlx1.rdc.local",
+          port = 5110,
+          jmx_port = 1500,
+          machinename = "bcdvlx1"
+        ),
+        Server(
+          name = "mydomain_wls_dev_server_2",
+          address = "bcdvlx2.rdc.local",
+          port = 5110,
+          jmx_port = 1500,
+          machinename = "bcdvlx1"
+        )
+      )
+    )
+  )
+)
+
+CreateDomain(domain, "mypassword").print

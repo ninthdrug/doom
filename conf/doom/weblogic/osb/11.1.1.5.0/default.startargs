@@ -1,0 +1,15 @@
+-Dcommon.components.home=/opt/oracle/11g/oracle_common
+-Djrf.version=11.1.1
+-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.Jdk14Logger
+-Ddomain.home=${domain.home}
+-Djrockit.optfile=/opt/oracle/11g/oracle_common/modules/oracle.jrf_11.1.1/jrocket_optfile.txt
+-Doracle.server.config.dir=${domain.home}/config/fmwconfig/servers/${server.name}
+-Doracle.domain.config.dir=${domain.home}/config/fmwconfig
+-Digf.arisidbeans.carmlloc=${domain.home}/config/fmwconfig/carml
+-Digf.arisidstack.home=${domain.home}/config/fmwconfig/arisidprovider
+-Doracle.security.jps.config=${domain.home}/config/fmwconfig/jps-config.xml
+-Doracle.deployed.app.dir=${domain.home}/servers/${server.name}/tmp/_WL_user
+-Doracle.deployed.app.ext=/-
+-Dweblogic.alternateTypesDirectory=/opt/oracle/11g/oracle_common/modules/oracle.ossoiap_11.1.1,/opt/oracle/11g/oracle_common/modules/oracle.oamprovider_11.1.1
+-Djava.protocol.handler.pkgs=oracle.mds.net.protocol
+-Dweblogic.jdbc.remoteEnabled=false

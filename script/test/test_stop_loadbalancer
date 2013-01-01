@@ -1,0 +1,15 @@
+#!/bin/sh
+LIBS=
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -cp $LIBS $0 $@
+!#
+
+import doom._
+  
+val domain = ConfigCache.getDomain("asset_wls_dev")
+val cmd = StopLoadBalancer(domain)
+println(cmd)
+cmd.print

@@ -1,0 +1,11 @@
+${mw.home}/patch_wls1035/profiles/default/sys_manifest_classpath/weblogic_patch.jar
+${mw.home}/patch_ocp360/profiles/default/sys_manifest_classpath/weblogic_patch.jar
+${java.home}/lib/tools.jar
+${wls.home}/server/lib/weblogic_sp.jar
+${wls.home}/server/lib/weblogic.jar
+${mw.home}/modules/features/weblogic.server.modules_10.3.5.0.jar
+${wls.home}/server/lib/webservices.jar
+${mw.home}/modules/org.apache.ant_1.7.1/lib/ant-all.jar
+${mw.home}/modules/net.sf.antcontrib_1.1.0.0_1-0b2/lib/ant-contrib.jar
+${wls.home}/common/derby/lib/derbyclient.jar
+${wls.home}/server/lib/xqrl.jar

@@ -1,0 +1,40 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+import java.io.File
+
+val HOME = sys.env("HOME")
+val SCALALIB = HOME + "/scala/lib/scala-library.jar"
+val DOOMHOME = sys.env("DOOMHOME")
+val LIBS = new File(DOOMHOME + "/lib").
+  listFiles.
+  filter(_.getName.endsWith(".jar")).
+  map(_.getCanonicalPath).
+  mkString(":")
+val SCRIPTCACHEDIR = HOME + "/http/scriptcache"
+val CLASSPATH = SCALALIB + ":" + LIBS + ":" + SCRIPTCACHEDIR
+
+val DOOM = HOME + "/jdk/bin/java" +
+  " -Xms1024m" +
+  " -Xmx1024m" +
+  " -classpath " + CLASSPATH + 
+  " -Dcom.sun.management.jmxremote.port=2100" +
+  " -Dcom.sun.management.jmxremote.authenticate=false" +
+  " -Dcom.sun.management.jmxremote.ssl=false" +
+  " -Dactors.corePoolSize=64" +
+  " -Dactors.maxPoolSize=256" +
+  " doom.server.DoomServer"
+
+
+if (psgrep("doom.server.DoomServer").length > 0) {
+  println("doom is alreading running")
+} else {
+  Runtime.getRuntime.exec(Array("sh", "-c", DOOM))
+}

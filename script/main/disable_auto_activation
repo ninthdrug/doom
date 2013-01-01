@@ -1,0 +1,122 @@
+#!/bin/sh
+LIBS=""
+for jar in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$jar
+done
+for jar in $DOOMHOME/lib/htmlunit/*.jar
+do
+  LIBS=$LIBS:$jar
+done
+
+exec scala -save -cp "$LIBS" $0 $@
+!#
+
+import com.gargoylesoftware.htmlunit._
+import com.gargoylesoftware.htmlunit.html._
+import doom._
+import scala.collection.JavaConversions._
+
+def error(msg : String) {
+  throw new RuntimeException(msg)
+}
+
+def findLink(page: HtmlPage, text : String) : HtmlAnchor = {
+  for (anchor <- page.getAnchors) {
+    if (anchor.asText.trim == text) return anchor
+  }
+  return null
+}
+
+def disableautoactivate(domain: Domain, user: User) {
+  try {
+    println("disable auto activation for " + user.userid + " on " + domain.name)
+    val server = domain.adminserver
+    val password = CredentialCache.getDoomPassword(user.userid)
+    val urlroot = "http://" + server.address + ":" + server.port + "/console"
+    val domainname = domain.name
+    var page : HtmlPage = webclient.getPage(urlroot)
+    if (page.getTitleText.trim != "Oracle WebLogic Server Administration Console") {
+      error("CANNOT CONNECT TO " + urlroot)
+    }
+  
+    var form = page.getFormByName("loginData")
+    form.getInputByName("j_username").asInstanceOf[HtmlInput].setValueAttribute(user.userid)
+    form.getInputByName("j_password").asInstanceOf[HtmlInput].setValueAttribute(password)
+    val login = if (domain.wl_version == "10.3.5.0") {
+      form.getInputByValue("Login").asInstanceOf[HtmlInput]
+    } else {
+      form.getInputByValue("Log In").asInstanceOf[HtmlInput]
+    }
+    page = login.click(0,0)
+    if (page.getTitleText.trim != "Home Page - " + domainname + " - WLS Console") {
+      error("CANNOT LOGIN " + user.userid + " ON " + urlroot)
+    }
+    var link = findLink(page, "Preferences")
+    page = link.click()
+    form = page.getFormByName("preferencesForm")
+    val input = form.getInputByName("GlobalPreferencesPortletpreferences.implicitActivation").asInstanceOf[HtmlInput]
+    if (input.isChecked()) {
+      input.click()
+      if (domain.wl_version == "10.3.5.0") {
+        page.getElementByName("Save").asInstanceOf[HtmlButton].click()
+      } else {
+        page.getElementByName("Save").asInstanceOf[HtmlButtonInput].click()
+      }
+    }
+    link = findLink(page, "Log Out")
+    page = link.click()
+  } catch {
+    case e : Exception => {
+      println("CANNOT COMPLETE: " + e.getMessage())
+    }
+  } finally {
+    if (webclient != null) {
+      webclient.closeAllWindows()
+    }
+  }
+}
+
+// MAIN SCRIPT
+import java.util.logging._
+val logger = Logger.getLogger("com.gargoylesoftware.htmlunit")
+logger.setLevel(Level.SEVERE)
+val webclient = new WebClient()
+
+var users = if (args.length == 0) {
+  ConfigCache.users
+} else {
+  ConfigCache.users filter { u => args.contains(u.userid) }
+}
+
+var domains = if (args.length == 0) {
+  ConfigCache.domains filter { _.wl_version.startsWith("10.3") }
+} else {
+  ConfigCache.domains filter { domain => args.contains(domain.name) }
+}
+
+for (domain <- domains) {
+  println(domain.name)
+}
+
+if (users.length == 0) {
+  users = ConfigCache.users
+}
+
+
+if (domains.length == 0) {
+  domains = ConfigCache.domains filter { _.wl_version.startsWith("10.3") }
+}
+
+for (domain <- domains) {
+  val project = domain.project
+  val env = domain.env
+  for (user <- users) {
+    if (Permission.check(user.userid, project, env, "bea_admin") ||
+        Permission.check(user.userid, project, env, "bea_operator") ||
+        Permission.check(user.userid, project, env, "bea_monitor")
+    ) {
+      disableautoactivate(domain, user)
+    }
+  }
+}

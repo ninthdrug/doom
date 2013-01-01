@@ -1,0 +1,6 @@
+val userid = request.getCookie("userid")
+if (userid == null || userid == "") {
+    redirect("home.html")
+} else {
+    doc
+}

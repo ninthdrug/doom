@@ -1,0 +1,34 @@
+import doom._
+
+val envs = List("dev", "tst", "acc", "prd")
+val EnvNames = Map(
+  "dev" -> "Development",
+  "tst" -> "Test",
+  "acc" -> "Acceptance",
+  "prd" -> "Production"
+)
+
+def domain2tree(domain: Domain): TreeNode = {
+  TreeNode(domain.name, domain.name)
+}
+
+def domainsForEnv(env: String): List[Domain] = {
+  ConfigCache.domains filter { domain => domain.env == env }
+}
+
+val id = request.params("id")
+val json = id match {
+  case "0" =>
+    val nodes = envs map {
+      env => TreeNode(
+        "env_" + env,
+        EnvNames(env),
+        true,
+        domainsForEnv(env) map domain2tree
+      )
+    }
+    "[ " + ((nodes map { node => node.json } ) mkString(", ")) + " ]"
+  case _ =>
+    "[]"
+}
+return json

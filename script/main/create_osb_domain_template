@@ -1,0 +1,66 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val DOMAIN = "mydomain"
+val ENV = "dev"
+val DOMAINNAME = DOMAIN + "_osb_" + ENV
+val PASSWORD = "mypassword"
+
+val datasources = List(
+  Datasource(
+    name = "wlsbjmsrpDataSource",
+    domainname = DOMAINNAME,
+    vendor = "Oracle",
+    driver = "oracle.jdbc.xa.client.OracleXADataSource",
+    dbname = "<dbname>",
+    dbhost = "<dbhost>",
+    dbport = "1521",
+    username = "appl_soainfra",
+    password = "<dbpassword>",
+    globaltransaction = "TwoPhaseCommit"
+  )
+)
+
+val domain = Domain(
+  name = DOMAINNAME,
+  domaintype = "osb",
+  env = ENV,
+  adminserver = Server(
+    name = DOMAINNAME + "_admin_server",
+    address = "bcdvlx0.rdc.local",
+    port = 5100,
+    jmx_port = 1500
+  ),
+  clusters = List(
+    Cluster(
+      name = DOMAINNAME + "_cluster",
+      servers = List(
+        Server(
+          name = DOMAINNAME + "_server_1",
+          address = "bcdvlx1.rdc.local",
+          port = 5110,
+          jmx_port = 1500,
+          machinename = "bcdvlx1"
+        ),
+        Server(
+          name = DOMAINNAME + "_server_2",
+          address = "bcdvlx2.rdc.local",
+          port = 5110,
+          jmx_port = 1500,
+          machinename = "bcdvlx1"
+        )
+      )
+    )
+  )
+)
+
+CredentialCache.addCredential("weblogic", DOMAINNAME, "weblogic", PASSWORD)
+CreateDomain(domain, PASSWORD, datasources).print

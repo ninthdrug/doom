@@ -1,0 +1,4 @@
+import doom._
+response.setCookie("userid", "", -1)
+response.setCookie("mygroups", "", -1)
+redirect("home.html")

@@ -1,0 +1,196 @@
+<project name="doom" basedir="." default="dist">
+  <description>doom</description>
+
+  <target name="init">
+    <property name="java.home" location="${user.home}/jdk"/>
+    <property name="scala.home" location="${user.home}/scala"/>
+    <property name="doom.home" location="${user.home}/doom"/>
+    <property name="weblogic.home" location="${user.home}/wlserver"/>
+    <property name="install.dir" location="${doom.home}"/>
+    <property name="bin.dir" location="${install.dir}/bin"/>
+    <property name="conf.dir" location="${install.dir}/conf"/>
+    <property name="domains.dir" location="${install.dir}/domains"/>
+    <property name="dist.dir" location="${install.dir}/software"/>
+    <property name="lib.dir" location="${install.dir}/lib"/>
+    <property name="loadbalancer.dir" location="${install.dir}/loadbalancer"/>
+    <property name="log.dir" location="${install.dir}/log"/>
+    <property name="share.dir" location="${install.dir}/share"/>
+    <property name="web.dir" location="${install.dir}/web"/>
+    <property name="cache.dir" location="${install.dir}/http/scriptcache"/>
+    <property name="server.port" value="9999"/>
+    <property name="dbhost" value="localhost"/>
+    <property name="dbuser" value="doom"/>
+    <property name="dbpassword" value="doom"/>
+    <echo message="install.dir: ${install.dir}"/>
+    <mkdir dir="build/classes"/>
+    <path id="build.classpath">
+      <pathelement location="${scala.home}/lib/scala-library.jar"/>
+      <pathelement location="lib/ninthdrug.jar"/>
+      <pathelement location="lib/mail.jar"/>
+      <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
+      <pathelement location="lib/wlfullclient.jar"/>
+    </path>
+    <path id="run.classpath">
+      <pathelement location="${scala.home}/lib/scala-library.jar"/>
+      <pathelement location="lib/ninthdrug.jar"/>
+      <pathelement location="build/doom.jar"/>
+      <pathelement location="lib/mail.jar"/>
+      <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
+      <pathelement location="lib/wlfullclient.jar"/>
+      <pathelement location="${web.dir}/WEB-INF/classes"/>
+    </path>
+    <path id="test.classpath">
+      <pathelement location="${scala.home}/lib/scala-library.jar"/>
+      <pathelement location="lib/ninthdrug.jar"/>
+      <pathelement location="lib/mail.jar"/>
+      <pathelement location="lib/postgresql-9.2-1002.jdbc4.jar"/>
+      <pathelement location="lib/scalatest_2.9.0-1.8.jar"/>
+      <pathelement location="lib/wlfullclient.jar"/>
+      <pathelement location="build/classes"/>
+    </path>
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <pathelement location="${scala.home}/lib/scala-compiler.jar"/>
+        <pathelement location="${scala.home}/lib/scala-library.jar"/>
+      </classpath>
+    </taskdef>
+  </target>
+
+  <target name="compile" depends="init">
+    <scalac srcdir="src/main/scala" 
+         destdir="build/classes" 
+         classpathref="build.classpath"
+         scalacdebugging="yes"
+         deprecation="yes">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="compile-test" depends="init">
+    <scalac srcdir="src/test/scala" 
+         destdir="build/classes" 
+         classpathref="test.classpath"
+         scalacdebugging="yes"
+         deprecation="yes">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="build/doom.jar" basedir="build/classes" />
+  </target>
+
+  <target name="dist" depends="jar">
+    <mkdir dir="build/dist/doom/bin"/>
+    <mkdir dir="build/dist/doom/lib"/>
+    <mkdir dir="build/dist/doom/web"/>
+
+    <filterset id="doomfilter">
+      <filter token="BINDIR" value="${bin.dir}"/>
+      <filter token="CACHEDIR" value="${cache.dir}"/>
+      <filter token="CONFDIR" value="${conf.dir}"/>
+      <filter token="DBHOST" value="${dbhost}"/>
+      <filter token="DBUSER" value="${dbuser}"/>
+      <filter token="DBPASSWORD" value="${dbpassword}"/>
+      <filter token="DOMAINSDIR" value="${domains.dir}"/>
+      <filter token="DOOMHOME" value="${doom.home}"/>
+      <filter token="DOOMSERVERPORT" value="${server.port}"/>
+      <filter token="INSTALLDIR" value="${install.dir}"/>
+      <filter token="JAVA_HOME" value="${java.home}"/>
+      <filter token="LIBDIR" value="${lib.dir}"/>
+      <filter token="LOADBALANCERDIR" value="${loadbalancer.dir}"/>
+      <filter token="LOGDIR" value="${log.dir}"/>
+      <filter token="SCALA_HOME" value="${scala.home}"/>
+      <filter token="SCALAHOME" value="${scala.home}"/>
+      <filter token="SHAREDIR" value="${share.dir}"/>
+      <filter token="WEBDIR" value="${web.dir}"/>
+      <filter token="WL_HOME" value="${weblogic.home}"/>
+    </filterset>
+
+    <copy todir="build/dist/doom/lib" file="build/doom.jar"/>
+
+    <copy todir="build/dist/doom/lib">
+      <fileset dir="lib">
+        <include name="**/*.jar"/>
+        <exclude name="scalatest*.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="build/dist/doom/bin">
+      <fileset dir="script/main">
+        <include name="add_domain_template"/>
+        <include name="backup_queue"/>
+        <include name="backup_doom_db"/>
+        <include name="create_doom_user"/>
+        <include name="create_osb_domain_template"/>
+        <include name="create_wls_domain_template"/>
+        <include name="doom"/>
+        <include name="dump_datasources"/>
+        <include name="dump_queue"/>
+        <include name="makeinstaller"/>
+        <include name="remove_domain_template"/>
+        <include name="reset_doom_password"/>
+        <include name="startdoom"/>
+        <include name="startms"/>
+        <include name="stopdoom"/>
+        <include name="sync_domain_user"/>
+        <include name="sync_domain_users"/>
+        <include name="sync_doom_user"/>
+        <include name="sync_doom_users"/>
+      </fileset>
+      <fileset dir="script/sql">
+        <include name="create_doom_db.sh"/>
+      </fileset>
+    </copy>
+
+    <copy file="script/main/install.sh" todir="build/dist/doom"/>
+
+    <copy todir="build/dist/doom/web">
+      <fileset dir="src/web"/>
+    </copy>
+
+    <copy todir="build/dist/doom/conf">
+      <fileset dir="conf"/>
+      <filterset refid="doomfilter"/>
+    </copy>
+
+    <chmod perm="a+x" file="build/dist/doom/install.sh"/>
+    <chmod perm="a+x">
+      <fileset dir="build/dist/doom/bin"/>
+    </chmod>
+
+    <exec executable="script/main/makeinstaller">
+      <arg value="build/dist/doom"/>
+      <arg value="build"/>
+    </exec>
+
+    <chmod perm="a+x" file="build/doom.bin" />
+
+    <copy file="build/doom.bin" todir="${dist.dir}"/>
+    <chmod perm="a+x" file="${dist.dir}/doom.bin"/>
+  </target>
+
+  <target name="install" depends="init">
+    <exec executable="${dist.dir}/doom.bin">
+      <env key="DOOMHOME" value="${doom.home}"/>
+    </exec>
+  </target>
+
+ <target name="test" depends="compile,compile-test">
+    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask" 
+      classpathref="test.classpath"/>
+  
+    <scalatest>
+      <runpath>
+        <pathelement path="test.classpath"/>
+      </runpath>
+   
+      <reporter type="stdout" />
+    </scalatest>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/> 
+    <delete dir="dist"/> 
+  </target>
+</project>

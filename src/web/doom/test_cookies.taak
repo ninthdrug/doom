@@ -1,0 +1,7 @@
+val buf = new StringBuffer()
+for (name <- request.cookieNames) {
+    buf.append(name + ": " + request.getCookie(name) + "\n")
+}
+println(buf.toString)
+println("b: " + request.getEncryptedCookie("b"))
+return buf.toString

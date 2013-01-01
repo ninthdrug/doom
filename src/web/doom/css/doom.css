@@ -1,0 +1,218 @@
+/* doom */
+
+html, body, form, fieldset {
+    margin: 0;
+    padding: 0;
+    font: Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, pre,
+blockquote, ul, ol, dl, address {
+    margin: 1em 0;
+    padding: 0;
+}
+
+li, dd, blockquote {
+    margin-left: 1em;
+}
+
+form label {
+    cursor: pointer;
+}
+
+fieldset, img {
+    border: none;
+}
+
+input, select, textarea {
+    font-size: 100%;
+}
+
+iframe {
+    margin:0;
+    border:1px solid #b9b9b9;
+}
+
+h1 {
+    color:#e65100; 
+    text-align:center;
+    font-family:arial;
+    font-size:2.18em;
+}
+
+h3 {
+    font-size:2.18em;
+    color:red;
+}
+
+thead {
+    background-color:#E6E6E6;
+}
+
+th {
+    text-align:center;
+    font-size:1.0em;
+}
+
+td { 
+    padding:2px;
+    font-size:0.8em;
+}
+
+.ok {
+    background-color: #71a527;    
+}
+
+.warn {
+    background-color: #e65100;
+}
+
+.critical {
+    background-color: #b90606;    
+}
+
+.btn {
+    margin-left:5px;
+    margin-right:5px; 
+    text-align:center;
+}
+
+.adminlink {
+    text-decoration: underline;
+}
+
+.sep { border-left: 4px solid #000000; }
+
+.odd { background-color:#A6A6A6; }
+
+.left { float: left; }
+
+.clear { clear: both; }
+
+.min200 { min-width: 200px; }
+
+.min400 { min-width: 400px; }
+
+#maincontainer {
+    margin:0 auto;
+    background:#fff;
+    padding:0 27px 20px 27px;
+    zoom:1;
+}
+
+#contentcontainer {
+    margin:18px 0 0 0;
+    background-repeat:no-repeat;
+    background-position:0 0;
+    width:100%;
+}
+
+#content {
+    padding:18px 0 0 0;
+}
+
+#queuescontent {
+    padding:18px 0 0 0;
+    white-space: nowrap;
+}
+
+#status {
+    min-width:200px;
+}
+
+#request {
+    height:205px;
+    overflow-y: scroll; 
+}
+
+#servers_table {
+    border-collapse:collapse;
+    width:100%;
+    background-color:white;
+}
+
+#servers_table td {
+    font-size:0.6em;
+    white-space: nowrap;
+}
+
+#servers_table .servertype td {
+    text-align:left;
+    font-size:0.8em;
+}
+
+#servers_table .domaingroup {
+    padding: 1px;
+    font-size:0.8em;
+}
+
+#servers_table .highlight {
+    background-color: #ADD8E6;
+}
+
+#logtable {
+    border-collapse:collapse;
+    background-color: #FFFFFF;
+    width:100%;
+}
+
+#logtable th {
+    text-align: left;
+}
+
+#info {
+    border-collapse:collapse;
+    width:100%;
+    background-color:white;
+}
+
+#contents.doom {
+    display: block;
+    margin: auto;
+}
+
+ul#navmenu {
+    list-style: none;
+    margin: 0;
+    padding: 7px 0;
+    border-bottom: 1px solid #CCC;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap
+}
+
+ul#navmenu li {
+    display: inline;
+    margin: 0 3px
+}
+
+ul#navmenu a {
+    text-decoration: none;
+    padding: 0 0 3px;
+    border-bottom: 4px solid #FFF;
+    color: #999
+}
+
+ul#navmenu a#current {
+    border-color: #F60;
+    color:#06F
+}
+
+ul#navmenu a:hover {
+    border-color: #F60;
+    color: #666
+}
+
+#tree_div {
+    float: left;
+    width: 300px;
+}
+
+#panel_div {
+    float: left;
+}
+
+#queues_table {
+    border-collapse:collapse;
+    width:100%;
+}

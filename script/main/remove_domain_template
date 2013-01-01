@@ -1,0 +1,21 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+val domain = ConfigCache.getDomain("mydomain_wls_dev")
+
+val machines = List(
+  Machine("machine0", "machine0.domain.local", "linuxuser"),
+  Machine("machine1", "machine1.domain.local", "linuxuser"),
+  Machine("machine2", "machine2.domain.local", "linuxuser")
+)
+
+RemoveDomain(domain).print
+RemoveMachines(machines).print

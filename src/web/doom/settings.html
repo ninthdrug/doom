@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Doom</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/doom/css/doom.css" type="text/css" media="screen" />
+</head>
+<body>
+<div id="maincontainer">
+    <div id="header">
+         <img src="/doom/images/logo.png" alt="logo"/>
+    </div>
+    <div id="navigation">
+        <ul id="navmenu">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="servers.html">Servers</a></li>
+            <li><a href="queues.html">Queues</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="logout.html">Logout</a></li>
+        </ul>
+    </div>
+    <div id="contents">
+        <p id="msg"></p>
+        <form action="changepassword_action.taak" method="post">
+            <h2>Settings</h2>
+            <table id="tb1">
+                <tr>
+                    <td>User Id: </td>
+                    <td><span id="userid">userid</span></td>
+                </tr>
+                <tr>
+                    <td>User Name: </td>
+                    <td><span id="username">username</span></td>
+                </tr>
+                <tr>
+                    <td>Email: </td>
+                    <td><span id="email">email</span></td>
+                </tr>
+                <tr>
+                    <td>New Password:</td>
+                    <td><input type="password" name="newpassword" /></td>
+                </tr>
+                <tr>
+                    <td>Confirm New Password:</td>
+                    <td><input type="password" name="newpassword2" /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="submit" /></td>
+                </tr>
+            </table>
+        </form>        
+    </div>
+</div>
+</body>
+</html>

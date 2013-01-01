@@ -1,0 +1,23 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+for (arg <- args) {
+  val server = ConfigCache.getServer(arg)
+  val domain = ConfigCache.getDomain(server.domainname)
+  val user = "weblogic"
+  val password = CredentialCache.getPassword(
+    "weblogic",
+    domain.name,
+    user
+  )
+  StartManagedServer(domain, server, user, password).print
+}
+

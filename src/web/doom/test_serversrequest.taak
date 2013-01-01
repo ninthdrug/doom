@@ -1,0 +1,11 @@
+import doom._
+
+val buf = new StringBuffer()
+val action = request.params("action")
+val servers = request.params.getAll("server")
+for (server <- servers) {
+    if (!ConfigCache.hasServer(server)) {
+        buf.append(server).append("\n")
+    }
+}
+return buf.toString

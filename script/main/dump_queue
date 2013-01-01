@@ -1,0 +1,32 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+export JAVA_OPTS="-Dweblogic.ThreadPoolSize=400 -Dweblogic.ThreadPoolPercentSocketReaders=50 -Dweblogic.SelfTuningThreadPoolSizeMin=400"
+
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+def usage {
+  println("usage: dump_queue <servername> <queuename>")
+}
+
+if (args.size != 2) {
+  usage
+  sys.exit(1)
+}
+
+val servername = args(0)
+val queuename = args(1)
+val filename = queuename + ".xml"
+WeblogicJMS.dumpQueue(servername, queuename, filename) match {
+  case (_, Some(e)) =>
+    println("ERROR: dumping " + queuename)
+  case (ids, None) =>
+    println("OK: " + ids.size + " messages in " + queuename)
+}
+

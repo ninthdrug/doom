@@ -1,0 +1,30 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+
+var userid = prompt(args, 0, "userid")
+var password = prompt(args, 1, "password")
+var username = prompt(args, 2, "username")
+var email = prompt(args, 3, "email")
+var groups = prompt(args, 4, "groups")
+
+println("userid: " + userid)
+println("password: " + password)
+println("username: " + username)
+println("email: " + email)
+println("groups: " + groups)
+
+CredentialCache.createDoomUser(
+  userid,
+  password,
+  username,
+  email,
+  groups.split(" ").toList
+)

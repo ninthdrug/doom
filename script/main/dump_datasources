@@ -1,0 +1,132 @@
+#!/bin/sh
+LIBS=""
+for JAR in $DOOMHOME/lib/*.jar
+do
+  LIBS=$LIBS:$JAR
+done
+exec scala -save -cp $LIBS $0 $@
+!#
+
+import doom._
+import java.io._
+
+import scala.collection.mutable.ListBuffer
+
+case class Datasource(
+  domain: String,
+  name: String,
+  url: String,
+  driver: String,
+  user: String,
+  password: String,
+  transaction: String,
+  poolinit: Int,
+  poolmax: Int,
+  properties: List[Tuple2[String,String]]
+)
+
+case class MultiDatasource(
+  domain: String,
+  name: String,
+  datasourceList: List[String]
+)
+
+def getDomainDatasources(domain: Domain) :
+    (List[Datasource], List[MultiDatasource]) = 
+{
+  val domainname = domain.name
+  val datasources = ListBuffer[Datasource]()
+  val multidatasources = ListBuffer[MultiDatasource]()
+  val adminserver = domain.adminserver
+  val host = adminserver.address
+  val port = adminserver.port
+  val password = CredentialCache.getPassword(
+    "weblogic",
+    domain.name,
+    "weblogic"
+  )
+  try {
+    val weblogicJMX = WeblogicJMX(host, port, "weblogic", password)
+    val jmx = weblogicJMX.domainJMX
+    val domainConfig = jmx.getName(
+      WeblogicJMX.DOMAIN_SERVICE,
+      "DomainConfiguration"
+    )
+    val jdbcSystemResources = jmx.getNameArray(
+      domainConfig,
+      "JDBCSystemResources"
+    )
+    for (jdbcSystemResource <- jdbcSystemResources) {
+      val jdbcResource = jmx.getName(jdbcSystemResource, "JDBCResource")
+      val name = jmx.getString(jdbcResource, "Name")
+      val params = jmx.getName(jdbcResource, "JDBCDataSourceParams")
+      val datasourceList = jmx.getString(params, "DataSourceList")
+      if (datasourceList == null) {
+        val transaction = jmx.getString(params, "GlobalTransactionsProtocol")
+        val poolParams = jmx.getName(jdbcResource, "JDBCConnectionPoolParams")
+        val poolinit = jmx.getInt(poolParams, "InitialCapacity")
+        val poolmax = jmx.getInt(poolParams, "MaxCapacity")
+        val driverObj = jmx.getName(jdbcResource, "JDBCDriverParams")
+        val driver = jmx.getString(driverObj, "DriverName")
+        val url = jmx.getString(driverObj, "Url")
+        //val password = jmx.getString(driverObj, "Password")
+        val password = ""
+        val propertiesObj = jmx.getName(driverObj, "Properties")
+        val props = jmx.getNameArray(propertiesObj, "Properties")
+        var propbuf = ListBuffer[Tuple2[String,String]]()
+        var user = ""
+        for (prop <- props) {
+          val propname = jmx.getString(prop, "Name")
+          val propvalue = jmx.getString(prop, "Value")
+          if (propname == "user") {
+            user = propvalue
+          } else {
+            propbuf += Tuple2(propname, propvalue)
+          }
+        }
+        val properties = propbuf.toList
+        val ds = Datasource(
+          domainname,
+          name,
+          url,
+          driver,
+          user,
+          password,
+          transaction,
+          poolinit,
+          poolmax,
+          properties
+        )
+        datasources.append(ds)
+      } else {
+        val mds = MultiDatasource(
+          domainname,
+          name,
+          datasourceList.split(",").toList
+        )
+        multidatasources.append(mds)
+      }
+    }
+  } catch {
+    case e : Exception => {
+      println("Cannot connect to " + host + ":" + port + " " + domainname)
+      e.printStackTrace
+    }
+  }
+  return (datasources.toList, multidatasources.toList)
+}
+
+for (d <- ConfigCache.domains) {
+  var (datasources, multidatasources) = getDomainDatasources(d)
+  for (ds <- datasources) {
+    println(
+      d.name + ", " +
+      ds.name + ", " +
+      ds.url + ", " +
+      ds.driver + ", " +
+      ds.user + ", " +
+      ds.transaction
+    )
+  }
+}
+
