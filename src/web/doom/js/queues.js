@@ -10,7 +10,6 @@ var MYGROUPS = getMyGroups();
 function popup(obj) {
     var servername = $('#servername').attr('value');
     var queuename = $(obj).parent().parent().attr('id');
-    $('#' + queuename + ' td:gt(0)').text('');
     $('#backup_server').text(servername);
     $('#backup_queue').text(queuename);
     $('#backup_status').text('working...');
@@ -36,7 +35,7 @@ function updateQueueStates(queues) {
     for (var i in queues) {
         var queue = queues[i];
         var name = queue.name;
-        var jndi = queue.jndi;
+        var queuename = naem.split("!").reverse()[0]
         var messageCount = queue.messageCount;
         var pendingMessageCount = queue.pendingMessageCount;
         var link = ""
@@ -44,7 +43,7 @@ function updateQueueStates(queues) {
             link = "<a href='#' onclick='javascript:return popup(this)'>backup</a>"
         }
         var row = "<tr " + (odd ? " class='odd' " : "") +
-                          "id='" + jndi + "'>" +
+                          "id='" + queuename + "'>" +
                   "<td>" + name + "</td>" +
                   "<td>" + messageCount + "</td>" +
                   "<td>" + pendingMessageCount + "</td>" +
